@@ -1,8 +1,8 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-const Todo = lazy(() => import("./page/Todo/Todo"));
-const SignIn = lazy(() => import("./page/SignIn/SignIn"));
+const Todo = lazy(() => import("page/Todo/Todo"));
+const SignIn = lazy(() => import("page/SignIn/SignIn"));
 
 function App() {
   return (
