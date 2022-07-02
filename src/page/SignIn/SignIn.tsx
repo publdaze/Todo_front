@@ -1,7 +1,11 @@
 import React, { useState, ChangeEventHandler, FormEventHandler } from "react";
+import { useNavigate } from "react-router-dom";
+
+import authAPI from "API/api";
 
 const SignIn = () => {
-  const [loginInfo, setLoginInfo] = useState({ loginId: "", password: "" });
+  const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
+  const navigate = useNavigate();
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setLoginInfo({ ...loginInfo, [e.target.name]: e.target.value });
@@ -9,15 +13,25 @@ const SignIn = () => {
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
-    console.log(loginInfo);
+
+    authAPI.signIn(loginInfo).then((data: any) => {
+      if (data?.accessToken !== undefined) {
+        // NOTE 이렇게 처리하는 것 말고 더 좋은 방법이 없을 지..
+        console.log("login 성공");
+        localStorage.setItem("token", data?.accessToken);
+        navigate("/");
+      } else {
+        console.log("login 실패");
+      }
+    });
   };
 
   return (
     <form className="mt-8 space-y-8" onSubmit={handleSubmit}>
       <div className="space-y-4">
         <input
-          id="id"
-          name="loginId"
+          id="username"
+          name="username"
           type="text"
           required
           className="relative block w-full px-3 py-4 focus:bg-gray-200 border rounded-md border-gray-300 focus:outline-none placeholder-gray-500"
