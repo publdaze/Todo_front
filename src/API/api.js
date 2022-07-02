@@ -16,7 +16,7 @@ async function signIn({ username, password }) {
     return error.response.data;
   }
 }
-
+// eslint-disable-next-line
 export default {
   signIn,
 };

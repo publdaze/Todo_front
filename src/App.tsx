@@ -8,7 +8,7 @@ function App() {
   return (
     <div className="App">
       <div className="min-h-screen flex items-center justify-center ">
-        <div className="max-w-md w-screen">
+        <div className="max-w-md w-screen h-[774px] bg-blue-100 py-16 px-4">
           <Suspense fallback={<div>Loading...</div>}>
             <Router>
               <Routes>
