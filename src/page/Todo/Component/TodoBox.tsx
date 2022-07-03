@@ -1,4 +1,5 @@
-import React, { useState, ChangeEventHandler } from "react";
+import React, { ChangeEventHandler } from "react";
+import { TrashIcon } from "@heroicons/react/outline";
 
 const TodoBox = (props: any) => {
   const { todoList, todo, todoIdx } = props;
@@ -15,6 +16,12 @@ const TodoBox = (props: any) => {
 
   const modifyTodo = (value: any) => {
     todoList[todoIdx] = { ...todoList[todoIdx], name: value };
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+    props.updateTodoList(!props.value);
+  };
+
+  const deleteTodo = () => {
+    todoList.splice(todoIdx, 1);
     localStorage.setItem("todoList", JSON.stringify(todoList));
     props.updateTodoList(!props.value);
   };
@@ -37,6 +44,12 @@ const TodoBox = (props: any) => {
         value={todo.name}
         onChange={handleInputChange}
       />
+      <button
+        className="p-1 rounded-full hover:bg-indigo-100"
+        onClick={deleteTodo}
+      >
+        <TrashIcon className=" w-5 h-5 text-indigo-400" />
+      </button>
     </div>
   );
 };
