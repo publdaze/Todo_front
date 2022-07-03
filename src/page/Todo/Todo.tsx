@@ -1,10 +1,23 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import AddTodoBox from "./Component/AddTodoBox";
 import TodoBox from "./Component/TodoBox";
 import OtherUserNav from "./Component/OtherUserNav";
 
 const Todo = () => {
-  const tmp = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [todoList, setTodoList] = useState(
+    JSON.parse(localStorage.getItem("todoList") || "[]")
+  );
+  const [add, setAdd] = useState(false);
+
+  const clickAddBtn = (value: any) => {
+    setAdd(value);
+  };
+
+  useEffect(() => {
+    console.log(JSON.parse(localStorage.getItem("todoList") || "[]"));
+    setTodoList(JSON.parse(localStorage.getItem("todoList") || "[]"));
+  }, [add]);
+
   return (
     <div className="">
       <div className="mb-10 flex justify-between items-center">
@@ -14,11 +27,11 @@ const Todo = () => {
         <OtherUserNav />
       </div>
       <div className=" h-[438px] overflow-y-scroll">
-        {tmp.map((t) => (
-          <TodoBox key={t} />
+        {todoList.map((todo: any, todoIdx: number) => (
+          <TodoBox key={todoIdx} todo={todo} />
         ))}
       </div>
-      <AddTodoBox />
+      <AddTodoBox todoList={todoList} value={add} clickAddBtn={clickAddBtn} />
     </div>
   );
 };
