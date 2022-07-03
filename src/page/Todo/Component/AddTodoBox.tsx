@@ -13,7 +13,7 @@ const AddTodoBox = (props: any) => {
     e.preventDefault();
 
     localStorage.setItem("todoList", JSON.stringify([...prevTodoList, todo]));
-    props.clickAddBtn(!props.value);
+    props.updateTodoList(!props.value);
     setTodo(""); // input창 비우기
   };
 

@@ -7,16 +7,16 @@ const Todo = () => {
   const [todoList, setTodoList] = useState(
     JSON.parse(localStorage.getItem("todoList") || "[]")
   );
-  const [add, setAdd] = useState(false);
+  const [update, setUpdate] = useState(false);
 
-  const clickAddBtn = (value: any) => {
-    setAdd(value);
+  const updateTodoList = (value: any) => {
+    setUpdate(value);
   };
 
   useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem("todoList") || "[]"));
+    //console.log(JSON.parse(localStorage.getItem("todoList") || "[]"));
     setTodoList(JSON.parse(localStorage.getItem("todoList") || "[]"));
-  }, [add]);
+  }, [update]);
 
   return (
     <div className="">
@@ -28,10 +28,21 @@ const Todo = () => {
       </div>
       <div className=" h-[438px] overflow-y-scroll">
         {todoList.map((todo: any, todoIdx: number) => (
-          <TodoBox key={todoIdx} todo={todo} />
+          <TodoBox
+            key={todoIdx}
+            todoList={todoList}
+            todo={todo}
+            todoIdx={todoIdx}
+            value={update}
+            updateTodoList={updateTodoList}
+          />
         ))}
       </div>
-      <AddTodoBox todoList={todoList} value={add} clickAddBtn={clickAddBtn} />
+      <AddTodoBox
+        todoList={todoList}
+        value={update}
+        updateTodoList={updateTodoList}
+      />
     </div>
   );
 };

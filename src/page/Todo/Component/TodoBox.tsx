@@ -1,9 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, ChangeEventHandler } from "react";
 
-const TodoBox = ({ todo }: any) => {
+const TodoBox = (props: any) => {
+  const { todoList, todo, todoIdx } = props;
   const [checkTodo, setCheckTodo] = useState(false);
+
   const onClick = () => {
     setCheckTodo((prev) => !prev);
+  };
+
+  const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    modifyTodo(e.target.value);
+  };
+
+  const modifyTodo = (value: any) => {
+    todoList[todoIdx] = value;
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+    props.updateTodoList(!props.value);
   };
 
   return (
@@ -15,12 +27,13 @@ const TodoBox = ({ todo }: any) => {
       />
       <input
         className={
-          "w-full border-b-blue-300 " +
+          "w-full border-b-blue-300 focus:outline-none focus:border-b focus:border-blue-300 " +
           (checkTodo
-            ? "line-through decoration-1 decoration-indigo-400 placeholder:text-slate-400 "
-            : "placeholder:text-blue-800")
+            ? "line-through decoration-1 decoration-indigo-400 text-slate-400 "
+            : "text-blue-800")
         }
-        placeholder={todo}
+        value={todo}
+        onChange={handleInputChange}
       />
     </div>
   );
