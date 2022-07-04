@@ -1,6 +1,10 @@
 import axios from "axios";
 
-async function signIn({ username, password }) {
+export type LoginResponse =  {
+  accessToken:string
+}
+
+async function signIn({ username, password }: {username: string, password: string}) {
   const options = {
     method: "POST",
     url: "/auth/login",
@@ -12,12 +16,12 @@ async function signIn({ username, password }) {
   try {
     const response = await axios(options);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     return error.response.data;
   }
 }
 
-async function refresh({ username, password, token }) {
+async function refresh({ username, password, token }: {username: string, password: string, token: string}) {
   const options = {
     method: "GET",
     url: "/auth/refresh",
@@ -32,12 +36,12 @@ async function refresh({ username, password, token }) {
   try {
     const response = await axios(options);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     return error.response.data;
   }
 }
 
-async function profile({ token }) {
+async function profile({ token }: {token: string}) {
   const options = {
     method: "GET",
     url: "/profile",
@@ -48,7 +52,7 @@ async function profile({ token }) {
   try {
     const response = await axios(options);
     return response.data;
-  } catch (error) {
+  } catch (error: any) {
     return error.response.data;
   }
 }

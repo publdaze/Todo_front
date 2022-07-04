@@ -25,6 +25,7 @@ const TodoBox = (props: any) => {
     todoList[todoIdx] = { ...todoList[todoIdx], name: value };
     localStorage.setItem(username + "todoList", JSON.stringify(todoList));
     props.updateTodoList(!props.value);
+  const modifyTodo = (value: string) => {
   };
 
   const deleteTodo = () => {

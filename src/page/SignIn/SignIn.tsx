@@ -1,7 +1,7 @@
 import React, { useState, ChangeEventHandler, FormEventHandler } from "react";
 import { useNavigate } from "react-router-dom";
 
-import authAPI from "API/api";
+import authAPI, { LoginResponse } from "API/api";
 
 const SignIn = () => {
   const [loginInfo, setLoginInfo] = useState({ username: "", password: "" });
@@ -14,11 +14,10 @@ const SignIn = () => {
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
-    authAPI.signIn(loginInfo).then((data: any) => {
+    authAPI.signIn(loginInfo).then((data: LoginResponse) => {
       if (data?.accessToken !== undefined) {
-        // NOTE 이렇게 처리하는 것 말고 더 좋은 방법이 없을 지..
         console.log("login 성공");
-        localStorage.setItem("token", data?.accessToken);
+        localStorage.setItem("token", data.accessToken);
         localStorage.setItem("username", loginInfo.username);
         localStorage.setItem("currentuser", loginInfo.username);
         navigate("/");
@@ -30,6 +29,9 @@ const SignIn = () => {
           }); */
       } else {
         console.log("login 실패");
+        alert(
+          "아이디 또는 비밀번호를 잘못 입력했습니다.\n입력하신 내용을 다시 확인해주세요."
+        );
       }
     });
   };
