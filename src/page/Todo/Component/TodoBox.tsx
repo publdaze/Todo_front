@@ -9,6 +9,7 @@ const TodoBox = (props: any) => {
   const { todoList, todo, todoIdx } = props;
   const username = localStorage.getItem("username");
   const currentuser = localStorage.getItem("currentuser");
+  const isMyPage = username === currentuser;
 
   const handleCheckboxChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     todoList[todoIdx] = { ...todoList[todoIdx], checked: e.target.checked };
@@ -40,7 +41,7 @@ const TodoBox = (props: any) => {
           checked={todo.checked}
           className="mr-5 w-6 h-6 appearance-none bg-blue-50 border rounded-md border-blue-100 focus:outline-none focus:ring-0 text-blue-300 cursor-pointer"
           onChange={handleCheckboxChange}
-          disabled={currentuser !== username}
+          disabled={!isMyPage}
         />
         <input
           className={
@@ -51,9 +52,9 @@ const TodoBox = (props: any) => {
           }
           value={todo.name}
           onChange={handleInputChange}
-          disabled={currentuser !== username}
+          disabled={!isMyPage}
         />
-        {currentuser === username ? (
+        {isMyPage ? (
           <button
             className="p-1 rounded-full hover:bg-indigo-100"
             onClick={deleteTodo}
@@ -62,7 +63,7 @@ const TodoBox = (props: any) => {
           </button>
         ) : null}
       </div>
-      {currentuser === username ? (
+      {isMyPage ? (
         <div className="ml-1 text-blue-500 space-y-3">
           <ChevronUpIcon
             className="w-4 h-4 hover:bg-blue-300 rounded-md"
