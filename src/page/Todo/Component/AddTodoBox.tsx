@@ -4,6 +4,7 @@ import { PlusIcon } from "@heroicons/react/outline";
 const AddTodoBox = (props: any) => {
   const [todo, setTodo] = useState("");
   const prevTodoList = props.todoList;
+  const username = localStorage.getItem("username");
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTodo(e.target.value);
@@ -13,7 +14,7 @@ const AddTodoBox = (props: any) => {
     e.preventDefault();
 
     localStorage.setItem(
-      "todoList",
+      username + "todoList",
       JSON.stringify([...prevTodoList, { name: todo, checked: false }])
     );
     props.updateTodoList(!props.value);

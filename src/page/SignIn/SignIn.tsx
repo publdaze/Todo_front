@@ -19,7 +19,15 @@ const SignIn = () => {
         // NOTE 이렇게 처리하는 것 말고 더 좋은 방법이 없을 지..
         console.log("login 성공");
         localStorage.setItem("token", data?.accessToken);
+        localStorage.setItem("username", loginInfo.username);
+        localStorage.setItem("currentuser", loginInfo.username);
         navigate("/");
+        /* authAPI
+          .refresh({ ...loginInfo, token: localStorage.getItem("token") })
+          .then((data: any) => {
+            console.log(data);
+            localStorage.setItem("token", data?.accessToken);
+          }); */
       } else {
         console.log("login 실패");
       }
