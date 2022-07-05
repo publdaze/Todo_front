@@ -30,7 +30,6 @@ const Todo = () => {
   }, []);
 
   const updateTodoList = () => {
-    console.log(currentuser);
     setTodoList(
       JSON.parse(localStorage.getItem(currentuser + "todoList") || "[]")
     );
@@ -40,7 +39,7 @@ const Todo = () => {
     <div className="">
       <div className="mb-10 flex justify-between items-center">
         <div className=" text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-sky-400 to-indigo-500">
-          {currentuser}'s <br /> TODO
+          {currentuser}'s TODO
         </div>
       </div>
       <div className=" h-[438px] overflow-y-scroll">
