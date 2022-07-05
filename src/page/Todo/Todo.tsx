@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import AddTodoBox from "./Component/AddTodoBox";
 import TodoBox from "./Component/TodoBox";
-import OtherUserNav from "./Component/OtherUserNav";
+import useLocalStorage from "./hook/useLocalStorage";
 
 // import profileAPI from "API/api";
 
@@ -11,9 +11,7 @@ const Todo = () => {
   const navigate = useNavigate();
   const username = localStorage.getItem("username");
   const currentuser = localStorage.getItem("currentuser");
-  const [todoList, setTodoList] = useState(
-    JSON.parse(localStorage.getItem(username + "todoList") || "[]")
-  );
+  const [todoList, setTodoList] = useLocalStorage(currentuser + "todoList", []);
 
   useEffect(() => {
     if (localStorage.getItem("token") === null) navigate("/signIn");

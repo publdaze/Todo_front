@@ -5,13 +5,14 @@ import React, {
   FormEventHandler,
 } from "react";
 import { PlusIcon } from "@heroicons/react/outline";
+import useLocalStorage from "../hook/useLocalStorage";
 
 const AddTodoBox = (props: any) => {
   const prevTodoList = props.prevTodoList;
   const username = localStorage.getItem("username");
 
   const [todo, setTodo] = useState("");
-  const [todoList, setTodoList] = useState(prevTodoList);
+  const [todoList, setTodoList] = useLocalStorage(username + "todoList", []);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTodo(e.target.value);
@@ -21,11 +22,6 @@ const AddTodoBox = (props: any) => {
     e.preventDefault();
 
     const currentTodoList = [...prevTodoList, { name: todo, checked: false }];
-
-    localStorage.setItem(
-      username + "todoList",
-      JSON.stringify(currentTodoList)
-    );
     setTodoList(currentTodoList);
     setTodo(""); // input창 비우기
   };

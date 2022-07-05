@@ -4,6 +4,7 @@ import {
   ChevronUpIcon,
   ChevronDownIcon,
 } from "@heroicons/react/outline";
+import useLocalStorage from "../hook/useLocalStorage";
 
 const TodoBox = (props: any) => {
   const { prevTodoList, todo, todoIdx } = props;
@@ -11,15 +12,15 @@ const TodoBox = (props: any) => {
   const currentuser = localStorage.getItem("currentuser");
   const isMyPage = username === currentuser;
 
-  const [todoList, setTodoList] = useState(prevTodoList);
+  const [todoList, setTodoList] = useLocalStorage(currentuser + "todoList", []);
 
   const handleCheckboxChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    prevTodoList[todoIdx] = {
+    let currentTodoList = [...prevTodoList];
+    currentTodoList[todoIdx] = {
       ...prevTodoList[todoIdx],
       checked: e.target.checked,
     };
-    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
-    setTodoList(localStorage.getItem(username + "todoList"));
+    setTodoList(currentTodoList);
   };
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
@@ -28,37 +29,26 @@ const TodoBox = (props: any) => {
 
   const modifyTodo = (value: string) => {
     //NOTE 디바운스,useRef
-    prevTodoList[todoIdx] = { ...prevTodoList[todoIdx], name: value };
-    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
-    setTodoList(localStorage.getItem(username + "todoList"));
+    let currentTodoList = [...prevTodoList];
+    currentTodoList[todoIdx] = { ...prevTodoList[todoIdx], name: value };
+    setTodoList(currentTodoList);
   };
 
   const deleteTodo = () => {
-    prevTodoList.splice(todoIdx, 1);
-    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
-    setTodoList(localStorage.getItem(username + "todoList"));
+    const currentTodoList = prevTodoList.filter(
+      (todo: string, idx: number) => todoIdx !== idx
+    );
+
+    setTodoList(currentTodoList);
   };
 
   const moveTodos = (distance: number) => {
-    [prevTodoList[todoIdx], prevTodoList[todoIdx + distance]] = [
+    let currentTodoList = [...prevTodoList];
+    [currentTodoList[todoIdx], currentTodoList[todoIdx + distance]] = [
       prevTodoList[todoIdx + distance],
       prevTodoList[todoIdx],
     ];
-    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
-  };
-
-  const upTodoOrder = () => {
-    if (todoIdx !== 0) {
-      moveTodos(-1);
-      setTodoList(localStorage.getItem(username + "todoList"));
-    }
-  };
-
-  const downTodoOrder = () => {
-    if (todoIdx !== prevTodoList.length - 1) {
-      moveTodos(+1);
-      setTodoList(localStorage.getItem(username + "todoList"));
-    }
+    setTodoList(currentTodoList);
   };
 
   useEffect(() => {
@@ -99,11 +89,15 @@ const TodoBox = (props: any) => {
         <div className="ml-1 text-blue-500 space-y-3">
           <ChevronUpIcon
             className="w-4 h-4 hover:bg-blue-300 rounded-md"
-            onClick={upTodoOrder}
+            onClick={() => {
+              if (todoIdx !== 0) moveTodos(-1);
+            }}
           />
           <ChevronDownIcon
             className="w-4 h-4 hover:bg-blue-300 rounded-md"
-            onClick={downTodoOrder}
+            onClick={() => {
+              if (todoIdx !== todoList.length - 1) moveTodos(+1);
+            }}
           />
         </div>
       ) : null}
