@@ -1,4 +1,4 @@
-import React, { ChangeEventHandler } from "react";
+import React, { ChangeEventHandler, useState, useEffect } from "react";
 import {
   TrashIcon,
   ChevronUpIcon,
@@ -6,33 +6,64 @@ import {
 } from "@heroicons/react/outline";
 
 const TodoBox = (props: any) => {
-  const { todoList, todo, todoIdx } = props;
+  const { prevTodoList, todo, todoIdx } = props;
   const username = localStorage.getItem("username");
   const currentuser = localStorage.getItem("currentuser");
   const isMyPage = username === currentuser;
 
+  const [todoList, setTodoList] = useState(prevTodoList);
+
   const handleCheckboxChange: ChangeEventHandler<HTMLInputElement> = (e) => {
-    todoList[todoIdx] = { ...todoList[todoIdx], checked: e.target.checked };
-    localStorage.setItem(username + "todoList", JSON.stringify(todoList));
-    props.updateTodoList(!props.value);
+    prevTodoList[todoIdx] = {
+      ...prevTodoList[todoIdx],
+      checked: e.target.checked,
+    };
+    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
+    setTodoList(localStorage.getItem(username + "todoList"));
   };
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     modifyTodo(e.target.value);
   };
 
-  const modifyTodo = (value: any) => {
-    todoList[todoIdx] = { ...todoList[todoIdx], name: value };
-    localStorage.setItem(username + "todoList", JSON.stringify(todoList));
-    props.updateTodoList(!props.value);
   const modifyTodo = (value: string) => {
+    //NOTE 디바운스,useRef
+    prevTodoList[todoIdx] = { ...prevTodoList[todoIdx], name: value };
+    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
+    setTodoList(localStorage.getItem(username + "todoList"));
   };
 
   const deleteTodo = () => {
-    todoList.splice(todoIdx, 1);
-    localStorage.setItem(username + "todoList", JSON.stringify(todoList));
-    props.updateTodoList(!props.value);
+    prevTodoList.splice(todoIdx, 1);
+    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
+    setTodoList(localStorage.getItem(username + "todoList"));
   };
+
+  const moveTodos = (distance: number) => {
+    [prevTodoList[todoIdx], prevTodoList[todoIdx + distance]] = [
+      prevTodoList[todoIdx + distance],
+      prevTodoList[todoIdx],
+    ];
+    localStorage.setItem(username + "todoList", JSON.stringify(prevTodoList));
+  };
+
+  const upTodoOrder = () => {
+    if (todoIdx !== 0) {
+      moveTodos(-1);
+      setTodoList(localStorage.getItem(username + "todoList"));
+    }
+  };
+
+  const downTodoOrder = () => {
+    if (todoIdx !== prevTodoList.length - 1) {
+      moveTodos(+1);
+      setTodoList(localStorage.getItem(username + "todoList"));
+    }
+  };
+
+  useEffect(() => {
+    props.updateTodoList();
+  }, [todoList]);
 
   return (
     <div className="flex items-center">
@@ -68,35 +99,11 @@ const TodoBox = (props: any) => {
         <div className="ml-1 text-blue-500 space-y-3">
           <ChevronUpIcon
             className="w-4 h-4 hover:bg-blue-300 rounded-md"
-            onClick={() => {
-              if (todoIdx !== 0) {
-                [todoList[todoIdx], todoList[todoIdx - 1]] = [
-                  todoList[todoIdx - 1],
-                  todoList[todoIdx],
-                ];
-                localStorage.setItem(
-                  username + "todoList",
-                  JSON.stringify(todoList)
-                );
-                props.updateTodoList(!props.value);
-              }
-            }}
+            onClick={upTodoOrder}
           />
           <ChevronDownIcon
             className="w-4 h-4 hover:bg-blue-300 rounded-md"
-            onClick={() => {
-              if (todoIdx !== todoList.length - 1) {
-                [todoList[todoIdx], todoList[todoIdx + 1]] = [
-                  todoList[todoIdx + 1],
-                  todoList[todoIdx],
-                ];
-                localStorage.setItem(
-                  username + "todoList",
-                  JSON.stringify(todoList)
-                );
-                props.updateTodoList(!props.value);
-              }
-            }}
+            onClick={downTodoOrder}
           />
         </div>
       ) : null}

@@ -1,10 +1,17 @@
-import React, { useState, ChangeEventHandler, FormEventHandler } from "react";
+import React, {
+  useState,
+  useEffect,
+  ChangeEventHandler,
+  FormEventHandler,
+} from "react";
 import { PlusIcon } from "@heroicons/react/outline";
 
 const AddTodoBox = (props: any) => {
-  const [todo, setTodo] = useState("");
-  const prevTodoList = props.todoList;
+  const prevTodoList = props.prevTodoList;
   const username = localStorage.getItem("username");
+
+  const [todo, setTodo] = useState("");
+  const [todoList, setTodoList] = useState(prevTodoList);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     setTodo(e.target.value);
@@ -13,13 +20,19 @@ const AddTodoBox = (props: any) => {
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault();
 
+    const currentTodoList = [...prevTodoList, { name: todo, checked: false }];
+
     localStorage.setItem(
       username + "todoList",
-      JSON.stringify([...prevTodoList, { name: todo, checked: false }])
+      JSON.stringify(currentTodoList)
     );
-    props.updateTodoList(!props.value);
+    setTodoList(currentTodoList);
     setTodo(""); // input창 비우기
   };
+
+  useEffect(() => {
+    props.updateTodoList();
+  }, [todoList]);
 
   return (
     <form
